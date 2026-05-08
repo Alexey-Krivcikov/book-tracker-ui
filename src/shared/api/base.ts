@@ -1,5 +1,6 @@
 export async function baseFetch(input: string, init?: RequestInit) {
   const API_URL = "http://localhost:3001";
+
   const request = async () =>
     fetch(`${API_URL}${input}`, {
       ...init,

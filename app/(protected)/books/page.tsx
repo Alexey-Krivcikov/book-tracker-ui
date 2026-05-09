@@ -1,1 +1,3 @@
-export { BooksPage as default } from "@pages/books";
+import BooksPage from "@pages/books/ui/BooksPage";
+
+export default BooksPage;

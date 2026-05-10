@@ -7,6 +7,7 @@ import { Button } from "@shared/ui/button";
 import { Input } from "@shared/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@shared/ui/card";
 import Image from "next/image";
+import { AddToLibraryButton } from "@features/book-search/ui/AddToLibraryButton";
 
 export const BookSearch = () => {
   const [query, setQuery] = useState("");
@@ -87,6 +88,7 @@ export const BookSearch = () => {
                       {book.description}
                     </div>
                   )}
+                  <AddToLibraryButton book={book} />
                 </CardContent>
               </div>
             </div>

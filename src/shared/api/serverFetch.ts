@@ -1,6 +1,5 @@
 import { auth } from "@shared/auth/auth";
-
-const API_URL = "http://localhost:3001";
+import { API_URL } from "@shared/config/api";
 
 export async function serverFetch(input: string, init: RequestInit = {}) {
   const session = await auth();

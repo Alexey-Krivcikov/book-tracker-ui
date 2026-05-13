@@ -1,8 +1,15 @@
 import { auth } from "@shared/auth/auth";
 
 export default auth((req) => {
-  if (!req.auth && !req.nextUrl.pathname.startsWith("/login")) {
+  const isLoggedIn = !!req.auth;
+  const isLoginPage = req.nextUrl.pathname.startsWith("/login");
+
+  if (!isLoggedIn && !isLoginPage) {
     return Response.redirect(new URL("/login", req.url));
+  }
+
+  if (isLoggedIn && isLoginPage) {
+    return Response.redirect(new URL("/books", req.url));
   }
 });
 

@@ -1,8 +1,7 @@
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import type { JWT } from "next-auth/jwt";
-
-const API_URL = "http://localhost:3001";
+import { API_URL } from "@shared/config/api";
 
 async function refreshAccessToken(token: JWT): Promise<JWT> {
   try {

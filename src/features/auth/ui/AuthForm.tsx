@@ -3,29 +3,51 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@shared/ui/input";
 import { Button } from "@shared/ui/button";
 import { registerUser } from "@entities/user/api/registerUser";
 
 type Mode = "login" | "register";
 
+const authSchema = z.object({
+  email: z.email("Некорректный email"),
+  password: z.string().min(6, "Минимум 6 символов").max(100, "Слишком длинный пароль"),
+});
+
+type AuthFormValues = z.infer<typeof authSchema>;
+
 export const AuthForm = () => {
   const router = useRouter();
 
   const [mode, setMode] = useState<Mode>("login");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const isLogin = mode === "login";
 
-  const handleSubmit = async () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    clearErrors,
+  } = useForm<AuthFormValues>({
+    resolver: zodResolver(authSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = async (values: AuthFormValues) => {
     setLoading(true);
-    setError(null);
+    setServerError(null);
 
     try {
+      const { email, password } = values;
+
       if (isLogin) {
         const result = await signIn("credentials", {
           email,
@@ -34,7 +56,7 @@ export const AuthForm = () => {
         });
 
         if (result?.error) {
-          setError("Неверный email или пароль");
+          setServerError("Неверный email или пароль");
           return;
         }
 
@@ -42,11 +64,13 @@ export const AuthForm = () => {
         return;
       }
 
-      // REGISTER
-      const result = await registerUser({ email, password });
+      const result = await registerUser({
+        email,
+        password,
+      });
 
       if (!result) {
-        setError("Ошибка регистрации");
+        setServerError("Ошибка регистрации");
         return;
       }
 
@@ -59,29 +83,32 @@ export const AuthForm = () => {
       if (!login?.error) {
         router.replace("/books");
       }
-    } catch (e) {
-      setError("Что-то пошло не так");
+    } catch {
+      setServerError("Что-то пошло не так");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col gap-4 w-[340px]">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 w-[340px]">
       <div className="text-lg font-semibold">{isLogin ? "Вход" : "Регистрация"}</div>
 
-      <Input placeholder="Почта" value={email} onChange={(e) => setEmail(e.target.value)} />
+      <div className="flex flex-col gap-1">
+        <Input placeholder="Почта" {...register("email")} />
 
-      <Input
-        type="password"
-        placeholder="Пароль"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+        {errors.email && <div className="text-sm text-red-500">{errors.email.message}</div>}
+      </div>
 
-      {error && <div className="text-sm text-red-500">{error}</div>}
+      <div className="flex flex-col gap-1">
+        <Input type="password" placeholder="Пароль" {...register("password")} />
 
-      <Button onClick={handleSubmit} disabled={loading}>
+        {errors.password && <div className="text-sm text-red-500">{errors.password.message}</div>}
+      </div>
+
+      {serverError && <div className="text-sm text-red-500">{serverError}</div>}
+
+      <Button type="submit" disabled={loading}>
         {loading
           ? isLogin
             ? "Входим..."
@@ -93,11 +120,15 @@ export const AuthForm = () => {
 
       <button
         type="button"
-        onClick={() => setMode(isLogin ? "register" : "login")}
+        onClick={() => {
+          setMode(isLogin ? "register" : "login");
+          setServerError(null);
+          clearErrors();
+        }}
         className="text-sm text-muted-foreground hover:text-foreground transition"
       >
         {isLogin ? "Нет аккаунта? Зарегистрироваться" : "Уже есть аккаунт? Войти"}
       </button>
-    </div>
+    </form>
   );
 };

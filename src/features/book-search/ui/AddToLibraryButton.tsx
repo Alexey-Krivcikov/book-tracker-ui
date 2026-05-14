@@ -11,13 +11,18 @@ type Props = {
 
 export const AddToLibraryButton = ({ book }: Props) => {
   const [loading, setLoading] = useState(false);
-  const [added, setAdded] = useState(false);
+  const [isAddedLocally, setIsAddedLocally] = useState(book.isAdded || false);
+
+  const isAdded = book.isAdded || isAddedLocally;
 
   const handleAdd = async () => {
+    if (isAdded) return;
+
     setLoading(true);
 
     try {
       await addUserBook({
+        externalId: book.externalId,
         title: book.title,
         authors: book.authors,
         description: book.description,
@@ -25,7 +30,7 @@ export const AddToLibraryButton = ({ book }: Props) => {
         status: UserBookStatus.PLANNED,
       });
 
-      setAdded(true);
+      setIsAddedLocally(true);
     } catch (e) {
       console.error(e);
     } finally {
@@ -33,9 +38,19 @@ export const AddToLibraryButton = ({ book }: Props) => {
     }
   };
 
+  const getButtonText = () => {
+    if (isAdded) return "В библиотеке";
+    if (loading) return "Добавляем...";
+    return "В библиотеку";
+  };
+
   return (
-    <Button onClick={handleAdd} disabled={loading || added} variant="secondary">
-      {added ? "Добавлено" : loading ? "Добавляем..." : "В библиотеку"}
+    <Button
+      onClick={handleAdd}
+      disabled={loading || isAdded}
+      variant={isAdded ? "outline" : "secondary"}
+    >
+      {getButtonText()}
     </Button>
   );
 };

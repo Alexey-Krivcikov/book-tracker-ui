@@ -8,6 +8,7 @@ export enum UserBookStatus {
 }
 
 export type AddUserBookDto = {
+  externalId: string;
   title: string;
   authors: string[];
   description?: string;
@@ -20,14 +21,6 @@ export async function addUserBook(dto: AddUserBookDto) {
   const res = await clientFetch("/user-books", {
     method: "POST",
     body: JSON.stringify(dto),
-  });
-
-  return res.json();
-}
-
-export async function getUserBooks() {
-  const res = await clientFetch("/user-books", {
-    method: "GET",
   });
 
   return res.json();

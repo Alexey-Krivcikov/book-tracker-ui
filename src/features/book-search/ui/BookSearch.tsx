@@ -14,12 +14,14 @@ export const BookSearch = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const handleSearch = async () => {
     if (!query.trim()) return;
 
     setLoading(true);
     setError(null);
+    setHasSearched(true);
 
     try {
       const data = await searchBooks(query);
@@ -48,7 +50,7 @@ export const BookSearch = () => {
 
       {error && <div className="text-sm text-destructive">{error}</div>}
 
-      {!loading && books.length === 0 && (
+      {!loading && hasSearched && books.length === 0 && (
         <div className="text-sm text-muted-foreground">Книги пока не найдены</div>
       )}
       <div className="grid gap-4">

@@ -175,7 +175,7 @@ export const UserLibrary = () => {
                     <span className="text-xs text-muted-foreground">Оценка</span>
 
                     <div className="flex items-center gap-1">
-                      {Array.from({ length: 10 }).map((_, index) => {
+                      {Array.from({ length: 5 }).map((_, index) => {
                         const value = index + 1;
                         const active = value <= (item.rating || 0);
 

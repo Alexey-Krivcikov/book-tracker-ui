@@ -1,37 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { searchBooks } from "../api/searchBooks";
-import type { Book } from "@entities/book/model/book";
 import { Button } from "@shared/ui/button";
 import { Input } from "@shared/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@shared/ui/card";
 import Image from "next/image";
 import { AddToLibraryButton } from "@features/book-search/ui/AddToLibraryButton";
+import { useSearchBooksQuery } from "@entities/book/api/queries";
 
 export const BookSearch = () => {
   const [query, setQuery] = useState("");
-  const [books, setBooks] = useState<Book[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [hasSearched, setHasSearched] = useState(false);
+  const [submittedQuery, setSubmittedQuery] = useState("");
 
-  const handleSearch = async () => {
+  const { data: books = [], isLoading, error } = useSearchBooksQuery(submittedQuery);
+
+  const handleSearch = () => {
     if (!query.trim()) return;
 
-    setLoading(true);
-    setError(null);
-    setHasSearched(true);
-
-    try {
-      const data = await searchBooks(query);
-      setBooks(data);
-    } catch (e) {
-      console.error(e);
-      setError("Ошибка загрузки книг");
-    } finally {
-      setLoading(false);
-    }
+    setSubmittedQuery(query);
   };
 
   return (
@@ -43,16 +29,17 @@ export const BookSearch = () => {
           onChange={(e) => setQuery(e.target.value)}
         />
 
-        <Button onClick={handleSearch} disabled={loading}>
-          {loading ? "Поиск..." : "Найти"}
+        <Button onClick={handleSearch} disabled={isLoading}>
+          {isLoading ? "Поиск..." : "Найти"}
         </Button>
       </div>
 
-      {error && <div className="text-sm text-destructive">{error}</div>}
+      {error && <div className="text-sm text-destructive">Ошибка загрузки книг</div>}
 
-      {!loading && hasSearched && books.length === 0 && (
+      {!isLoading && submittedQuery && books.length === 0 && (
         <div className="text-sm text-muted-foreground">Книги пока не найдены</div>
       )}
+
       <div className="grid gap-4">
         {books.map((book, index) => (
           <Card key={`${book.externalId}-${index}`} className="overflow-hidden">
@@ -90,6 +77,7 @@ export const BookSearch = () => {
                       {book.description}
                     </div>
                   )}
+
                   <AddToLibraryButton book={book} />
                 </CardContent>
               </div>

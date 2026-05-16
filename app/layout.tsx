@@ -4,6 +4,7 @@ import React from "react";
 import { geistSans, geistMono } from "@shared/config/fonts";
 import { Geist } from "next/font/google";
 import { cn } from "@shared/lib/utils";
+import { QueryProvider } from "@app/providers/QueryProvider";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -29,7 +30,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         geist.variable,
       )}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <QueryProvider>{children}</QueryProvider>
+      </body>
     </html>
   );
 }

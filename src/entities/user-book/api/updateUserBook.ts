@@ -1,5 +1,5 @@
 import { clientFetch } from "@shared/api/clientFetch";
-import { UserBookStatus } from "@entities/user-book/api/userBooks.api";
+import { UserBookStatus } from "@entities/user-book/model/user-book";
 
 type UpdateUserBookPayload = {
   status?: UserBookStatus;

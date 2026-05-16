@@ -1,5 +1,3 @@
-import { clientFetch } from "@shared/api/clientFetch";
-
 export enum UserBookStatus {
   PLANNED = "planned",
   READING = "reading",
@@ -17,11 +15,12 @@ export type AddUserBookDto = {
   rating?: number;
 };
 
-export async function addUserBook(dto: AddUserBookDto) {
-  const res = await clientFetch("/user-books", {
-    method: "POST",
-    body: JSON.stringify(dto),
-  });
-
-  return res.json();
-}
+export type UserBook = {
+  id: string;
+  title: string;
+  authors: string[];
+  cover?: string;
+  status: UserBookStatus;
+  rating?: number;
+  description?: string;
+};

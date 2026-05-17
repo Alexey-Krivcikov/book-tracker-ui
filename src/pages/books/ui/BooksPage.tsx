@@ -1,4 +1,10 @@
 import { BookSearch } from "@features/book-search/ui/BookSearch";
+import { Metadata } from "next";
+
+export const booksMetadata: Metadata = {
+  title: "Книги",
+  description: "Список всех книг",
+};
 
 export default async function BooksPage() {
   return (

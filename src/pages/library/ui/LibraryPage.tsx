@@ -1,4 +1,10 @@
 import { UserLibrary } from "@features/user-library/ui/UserLibrary";
+import { Metadata } from "next";
+
+export const libraryMetadata: Metadata = {
+  title: "Библиотека",
+  description: "Список всех ваших книг",
+};
 
 export default function LibraryPage() {
   return (

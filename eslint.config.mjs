@@ -30,6 +30,7 @@ const eslintConfig = defineConfig([
     "**/*.min.js",
     "coverage/**",
     ".git/**",
+    ".pnp.cjs",
   ]),
 ]);
 

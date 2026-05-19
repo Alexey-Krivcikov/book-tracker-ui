@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@shared/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@shared/ui/select";
 import { Trash2 } from "lucide-react";
 import { Button } from "@shared/ui/button";
-import { UserBookStatus } from "@entities/user-book/model/user-book";
+import { UserBookStatus } from "@entities/user-book/model/models";
 import {
   useDeleteUserBookMutation,
   useUpdateUserBookMutation,

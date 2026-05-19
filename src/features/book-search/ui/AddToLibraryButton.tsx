@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { Book } from "@entities/book/model/book";
 import { Button } from "@shared/ui/button";
-import { UserBookStatus } from "@entities/user-book/model/user-book";
+import { UserBookStatus } from "@entities/user-book/model/models";
 import { useQueryClient } from "@tanstack/react-query";
 import { userBookKeys } from "@entities/user-book/model/keys";
 import { useAddUserBookMutation } from "@entities/user-book/api";

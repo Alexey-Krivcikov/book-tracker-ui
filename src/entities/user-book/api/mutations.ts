@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AddUserBookDto, UserBookStatus } from "@entities/user-book/model/user-book";
+import { AddUserBookDto, UserBookStatus } from "@entities/user-book/model/models";
 import { addUserBook, deleteUserBook, updateUserBook } from "@entities/user-book/api";
 import { userBookKeys } from "@entities/user-book/model/keys";
 import { mutationKeys } from "@shared/model/mutationKeys";

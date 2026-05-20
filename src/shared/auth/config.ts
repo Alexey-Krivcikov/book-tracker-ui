@@ -15,11 +15,14 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
       }),
     });
 
-    const data = await response.json();
-
     if (!response.ok) {
-      throw data;
+      return {
+        ...token,
+        error: "RefreshAccessTokenError",
+      };
     }
+
+    const data = await response.json();
 
     return {
       ...token,

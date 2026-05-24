@@ -4,11 +4,15 @@ export default auth((req) => {
   const isLoggedIn = !!req.auth;
   const isLoginPage = req.nextUrl.pathname.startsWith("/login");
 
-  if (!isLoggedIn && !isLoginPage) {
-    return Response.redirect(new URL("/login", req.url));
+  const hasRefreshError = req.auth?.error === "RefreshAccessTokenError";
+
+  if (!isLoggedIn || hasRefreshError) {
+    if (!isLoginPage) {
+      return Response.redirect(new URL("/login", req.url));
+    }
   }
 
-  if (isLoggedIn && isLoginPage) {
+  if (isLoggedIn && !hasRefreshError && isLoginPage) {
     return Response.redirect(new URL("/books", req.url));
   }
 });

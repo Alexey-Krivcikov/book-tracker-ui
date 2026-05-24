@@ -15,24 +15,29 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
       }),
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
       return {
         ...token,
         error: "RefreshAccessTokenError",
+        accessToken: undefined,
+        refreshToken: undefined,
       };
     }
-
-    const data = await response.json();
 
     return {
       ...token,
       accessToken: data.accessToken,
       accessTokenExpires: Date.now() + 60 * 60 * 1000,
+      error: undefined,
     };
   } catch {
     return {
       ...token,
       error: "RefreshAccessTokenError",
+      accessToken: undefined,
+      refreshToken: undefined,
     };
   }
 }
@@ -59,9 +64,7 @@ export const authConfig = {
 
         const data = await res.json();
 
-        if (!res.ok) {
-          return null;
-        }
+        if (!res.ok) return null;
 
         return {
           id: data.user.id,
@@ -92,6 +95,12 @@ export const authConfig = {
         token.accessToken = user.accessToken;
         token.refreshToken = user.refreshToken;
         token.accessTokenExpires = Date.now() + 60 * 60 * 1000;
+
+        return token;
+      }
+
+      if (token.error === "RefreshAccessTokenError") {
+        return token;
       }
 
       if (typeof token.accessTokenExpires === "number" && Date.now() > token.accessTokenExpires) {

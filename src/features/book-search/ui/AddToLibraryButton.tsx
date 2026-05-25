@@ -17,7 +17,6 @@ export const AddToLibraryButton = ({ book }: Props) => {
 
   const addBook = useAddUserBookMutation();
   const queryClient = useQueryClient();
-
   const isAdded = book.isAdded || isAddedLocally;
 
   const handleAdd = () => {

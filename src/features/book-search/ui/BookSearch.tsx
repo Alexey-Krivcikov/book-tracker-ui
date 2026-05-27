@@ -41,8 +41,8 @@ export const BookSearch = () => {
       )}
 
       <div className="grid gap-4">
-        {books.map((book, index) => (
-          <Card key={`${book.externalId}-${index}`} className="overflow-hidden">
+        {books.map((book) => (
+          <Card key={book.externalId} className="overflow-hidden">
             <div className="flex gap-4 p-4">
               {book.cover ? (
                 <div className="relative h-36 w-24 shrink-0 overflow-hidden rounded-md border">

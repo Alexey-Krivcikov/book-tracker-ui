@@ -12,7 +12,6 @@ export const Navbar = () => {
           <Link href="/books">Поиск</Link>
           <Link href="/library">Библиотека</Link>
         </div>
-
         <Button variant="outline" onClick={() => signOut()}>
           Выйти
         </Button>
